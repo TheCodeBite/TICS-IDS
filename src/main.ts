@@ -12,7 +12,7 @@ const config={
   authDomain: "pwa-example-e8751.firebaseapp.com",
   databaseURL: "https://pwa-example-e8751.firebaseio.com",
   projectId: "pwa-example-e8751",
-  storageBucket: "",
+  storageBucket: "gs://pwa-example-e8751.appspot.com",
   messagingSenderId: "837519649274",
   appId: "1:837519649274:web:591ed0d7fb092465045c43"
 };
@@ -24,7 +24,6 @@ messaging.usePublicVapidKey("BLiBy6FzKEeDilYY12nadmdYbkw7bvHhEzu_mQEZo9-4_SSh9Ry
 
 messaging.requestPermission().then(()=>{
   console.log('Notificacion permission granted.');
-
   messaging.getToken().then((token) =>{
     console.log(token)
   });
