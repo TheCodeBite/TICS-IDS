@@ -7,7 +7,7 @@ import About from './views/About.vue';
 
 Vue.use(Router);
 
-export default new Router({
+const router= new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
@@ -31,6 +31,18 @@ export default new Router({
       name: 'about',
       component: About,
     },
-    { path: '*', redirect: '/' }
+    { path: '*', redirect: '/login' }
   ],
 });
+router.beforeEach((to, from, next) => {
+  const publicPages = ['/login'];
+  const authRequired = !publicPages.includes(to.path);
+  const loggedIn = localStorage.getItem('token');
+
+  if (authRequired && !loggedIn){
+    return next('/login');
+  }
+  next();
+})
+
+export default router;

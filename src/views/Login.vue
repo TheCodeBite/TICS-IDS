@@ -43,6 +43,7 @@
                 show2: false,
                 password: '',
                 username: '',
+                url:"https://bodegaapi.herokuapp.com/api/v1/",
                 rules: {
                     required: value => !!value || 'Campo requerido.',
                     min: value => value.length >= 8 || 'Min 8 carácteres',
@@ -60,13 +61,17 @@
         },
         mounted() {
             console.log('Componente listo')
-            axios.get("https://bodegaapi.herokuapp.com/api/v1/users/", this.config).then((response) => {
+            axios.get(this.url+"users/", this.config).then((response) => {
                 console.log(response.data)
             })
         },
         methods: {
             iniciarSesion() {
-                console.log(this.username," : ",this.password)
+                let params={ "username":this.username, "password":this.password }
+                axios.post(this.url+"rest-auth/login/",params).then((response) => {
+                    localStorage.setItem('token', JSON.stringify(response.data["key"]));
+                    window.location.href = '/' 
+                })
             }
         }
     }
