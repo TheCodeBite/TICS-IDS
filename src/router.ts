@@ -4,6 +4,7 @@ import Home from './views/Home.vue';
 import Login from './views/Login.vue';
 import Register from './views/register.vue';
 import About from './views/About.vue';
+import Sale from './views/Sale.vue';
 
 Vue.use(Router);
 
@@ -25,6 +26,11 @@ const router= new Router({
       path: '/register',
       name: 'register',
       component: Register,
+    },
+    {
+      path: '/ventas',
+      name: 'ventas',
+      component: Sale,
     },
     {
       path: '/about',
