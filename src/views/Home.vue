@@ -71,7 +71,7 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
-          <v-dialog v-model="dialog3" max-width="250px">
+          <v-dialog v-if="true" v-model="dialog3" max-width="250px">
             <template v-slot:activator="{ on }">
               <v-icon small class="mr-2" title="Borrar" v-on="on">delete</v-icon>
             </template>
@@ -108,7 +108,8 @@ export default {
       dialog: false,
       dialog2: false,
       dialog3: false,
-      cantidad:"",
+      cantidad:null,
+      admin:false,
       page: 1,
       pageCount: 0,
       itemsPerPage: 10,
@@ -149,52 +150,44 @@ export default {
     close() {
       this.dialog = false;
       this.dialog2= false;
-      this.dialog3= false,
-    },
-    save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.desserts[this.editedIndex], this.editedItem);
-      } else {
-        this.desserts.push(this.editedItem);
-      }
-      this.close();
+      this.dialog3= false;
     },
     vender(item) {
-      let params = {
-        "id": item.id,
-        "price": item.price,
-        "tax": item.tax,
-        "product": item.product,
-        "user": item.user,
-        "acction": 2,
-        "quantity": this.cantidad
-      };
-      console.log(params)
-      axios.put(this.url + "inventories/venta/"+item.id+"/", params, this.config)
-        .then(response => {
-          console.log(response.data)
-        });
-      this.verInventario();
-      this.dialog2= false;
+        let params = {
+            "id": item.id,
+            "price": item.price,
+            "tax": item.tax,
+            "product": item.product,
+            "user": item.user,
+            "acction": 2,
+            "quantity": parseInt(this.cantidad)
+        };
+        console.log(params)
+        axios.put(this.url + "inventories/venta/"+item.id+"/", params, this.config)
+            .then(response => {
+            console.log(response.data)
+            });
+        this.verInventario();
+        this.dialog2= false;
     },
     deleteItem(item) {
         let c=item.quantity - this.cantidad
-      let params = {
-        "id": item.id,
-        "price": item.price,
-        "tax": item.tax,
-        "product": item.product,
-        "user": item.user,
-        "quantity": c
-      };
-      console.log(params)
-      axios.put(this.url + "inventories/"+item.id+"/", params, this.config)
-        .then(response => {
-          console.log(response.data)
-        });
-      this.verInventario();
-      this.dialog2= false;
+        let params = {
+            "id": item.id,
+            "price": item.price,
+            "tax": item.tax,
+            "product": item.product,
+            "user": item.user,
+            "quantity": c
+        };
+        console.log(params)
+        axios.put(this.url + "inventories/"+item.id+"/", params, this.config)
+            .then(response => {
+            console.log(response.data)
+            });
+        this.verInventario();
+        this.dialog3= false;
     }
   }
 };
-</script>k
+</script>
