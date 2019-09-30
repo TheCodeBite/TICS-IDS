@@ -51,25 +51,17 @@
                         const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
                         return pattern.test(value) || 'Correo invalido.'
                     }
-                },
-                config: {
-                    headers: {
-                        Authorization: 'token af81d0628ae7af0ea728eb7cdcec5eb69dc2a660'
-                    }
                 }
             }
         },
         mounted() {
             console.log('Componente listo')
-            axios.get(this.url+"users/", this.config).then((response) => {
-                console.log(response.data)
-            })
         },
         methods: {
             iniciarSesion() {
                 let params={ "username":this.username, "password":this.password }
                 axios.post(this.url+"rest-auth/login/",params).then((response) => {
-                    localStorage.setItem('token', JSON.stringify(response.data["key"]));
+                    localStorage.setItem('token', JSON.stringify(response.data));
                     window.location.href = '/' 
                 })
             }
