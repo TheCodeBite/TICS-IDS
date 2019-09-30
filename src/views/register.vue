@@ -60,7 +60,7 @@ export default {
         let params = { "username" : this.username, "email": this.email, "password": this.password, "rol": this.rol }
         console.log("Estos son los parametros" );
         console.log(params);
-
+        
         axios.post(this.url + "users/", params, this.config).then((response) => {
             console.log(response); 
         });
