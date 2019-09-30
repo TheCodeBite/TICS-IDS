@@ -5,24 +5,26 @@
       <thead class="thead-dark">
         <th scope="col">Quantity</th>
         <th scope="col">Discount</th>
-        <th scope="col">Status</th>
         <th scope="col">Fecha Compra</th>
         <th scope="col">Metodo de pago</th>
         <th scope="col">Producto</th>
         <th scope="col">Usuario</th>
         <th scope="col">Total</th>
+        <th scope="col">Venta</th>
       </thead>
 
       <tbody>
         <tr v-for="item in items">
-          <td>{{item.quantity}}</td>
-          <td>{{item.discount}}</td>
-          <td>{{item.status}}</td>
-          <td>{{item.date}}</td>
-          <td>{{item.payment_method}}</td>
-          <td>{{item.name}}</td>
-          <td>{{item.user}}</td>
-          <td>{{item.total}}</td>
+          
+            <td v-if="item.status === 1">{{item.quantity}}</td>
+            <td v-if="item.status === 1">{{item.discount}}</td>
+            <td v-if="item.status === 1">{{item.date}}</td>
+            <td v-if="item.status === 1">{{item.payment_method}}</td>
+            <td v-if="item.status === 1">{{item.name}}</td>
+            <td v-if="item.status === 1">{{item.user}}</td>
+            <td v-if="item.status === 1">{{item.total}}</td>
+            <td v-if="item.status === 1"><button class="btn btn-sm btn-danger" @click='cancelarVenta(item)'>Cancelar venta</button> </td>
+          
         </tr>
       </tbody>
     </table>
@@ -30,6 +32,7 @@
 </template>
 <script>
 import axios from "axios";
+import Axios from 'axios';
 export default {
   name: "register",
   data() {
@@ -70,6 +73,16 @@ export default {
       };
       console.log("Estos son los parametros");
       console.log(params);
+    },
+    cancelarVenta(item){
+      item.status = 1;
+      console.log(item.status)
+      Axios.put(this.url + "sales/" + item.id + "/", item, this.config).then((response) => {
+        console.log("dato editado")
+        console.log(item)
+      })
+      console.log("este es el item")
+      
     }
   }
 };
