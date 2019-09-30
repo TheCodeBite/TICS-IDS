@@ -4,24 +4,52 @@
       <v-card-title style="background-color:#5CD5C6">
         Productos
         <div class="flex-grow-1"></div>
-        <v-text-field style="margin-bottom:15px;" v-model="search" append-icon="search" label="Buscar" single-line hide-details></v-text-field>
+        <v-text-field
+          style="margin-bottom:15px;"
+          v-model="search"
+          append-icon="search"
+          label="Buscar"
+          single-line
+          hide-details
+        ></v-text-field>
         <div class="flex-grow-1"></div>
         <v-dialog v-model="dialog" max-width="500px">
           <template v-slot:activator="{ on }">
-            <v-btn color="primary" dark class="mb-2" v-on="on">Nuevo producto</v-btn>
+            <button class="btn btn-primary btn-sm" v-on="on">Agregar Producto</button>
           </template>
           <v-card>
             <v-card-title>
-              <span class="headline">Hola</span>
+              <span class="headline">Nuevo Producto</span>
             </v-card-title>
 
             <v-card-text>
               <v-container>
-                <v-row>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field label="Dessert name"></v-text-field>
-                  </v-col>
-                </v-row>
+                  <v-text-field
+                    v-model="name"
+                    :counter="20"
+                    :rules="nameRules"
+                    label="Nombre del producto"
+                    required
+                  ></v-text-field>
+
+                  <v-text-field
+                    v-model="name"
+                    :counter="20"
+                    :rules="nameRules"
+                    label="Cantidad"
+                    required
+                  ></v-text-field>
+
+                  <v-text-field
+                    v-model="name"
+                    :counter="20"
+                    :rules="nameRules"
+                    label="Precio"
+                    required
+                  ></v-text-field>
+                  
+                  <v-file-input label="File input"></v-file-input>
+                  
               </v-container>
             </v-card-text>
 
@@ -86,6 +114,7 @@ export default {
     };
     axios.get(this.url + "inventories/", this.config).then(response => {
       this.desserts = response.data;
+      console.log("algo");
     });
   },
   methods: {
