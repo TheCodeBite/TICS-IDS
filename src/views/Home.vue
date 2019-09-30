@@ -71,7 +71,26 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
-          <v-icon small title="Borrar" @click="deleteItem(item)">delete</v-icon>
+          <v-dialog v-model="dialog3" max-width="250px">
+            <template v-slot:activator="{ on }">
+              <v-icon small class="mr-2" title="Borrar" v-on="on">delete</v-icon>
+            </template>
+            <v-card>
+              <v-card-title>
+                <span class="headline">Cantidad</span>
+              </v-card-title>
+
+              <v-card-text>
+                <v-text-field v-model="cantidad" type="number" label="Cantidas"></v-text-field>
+              </v-card-text>
+
+              <v-card-actions>
+                <div class="flex-grow-1"></div>
+                <v-btn color="blue darken-1" text @click="close">Cancelar</v-btn>
+                <v-btn color="blue darken-1" text @click="deleteItem(item)">Borrar</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
         </template>
       </v-data-table>
       <div class="text-center pt-2">
@@ -88,6 +107,7 @@ export default {
     return {
       dialog: false,
       dialog2: false,
+      dialog3: false,
       cantidad:"",
       page: 1,
       pageCount: 0,
@@ -129,6 +149,7 @@ export default {
     close() {
       this.dialog = false;
       this.dialog2= false;
+      this.dialog3= false,
     },
     save() {
       if (this.editedIndex > -1) {
@@ -157,10 +178,23 @@ export default {
       this.dialog2= false;
     },
     deleteItem(item) {
-      axios.get(this.url + "inventories/", this.config).then(response => {
-        this.desserts = response.data;
-      });
+        let c=item.quantity - this.cantidad
+      let params = {
+        "id": item.id,
+        "price": item.price,
+        "tax": item.tax,
+        "product": item.product,
+        "user": item.user,
+        "quantity": c
+      };
+      console.log(params)
+      axios.put(this.url + "inventories/"+item.id+"/", params, this.config)
+        .then(response => {
+          console.log(response.data)
+        });
+      this.verInventario();
+      this.dialog2= false;
     }
   }
 };
-</script>
+</script>k
