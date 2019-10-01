@@ -1,5 +1,5 @@
 import axios from 'axios';
-const url="https://bodegaapi.herokuapp.com/api/v1/",
+const url="https://bodegaapi.herokuapp.com/api/v1/";
 export const userService = {
     login(username:String, password:String) {
     const requestOptions = {

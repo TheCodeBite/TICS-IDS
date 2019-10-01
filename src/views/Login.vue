@@ -43,6 +43,8 @@
                 show2: false,
                 password: '',
                 username: '',
+                token: "",
+                config: "",
                 url:"https://bodegaapi.herokuapp.com/api/v1/",
                 rules: {
                     required: value => !!value || 'Campo requerido.',
@@ -62,7 +64,16 @@
                 let params={ "username":this.username, "password":this.password }
                 axios.post(this.url+"rest-auth/login/",params).then((response) => {
                     localStorage.setItem('token', JSON.stringify(response.data));
-                    window.location.href = '/' 
+                    this.token = JSON.parse(localStorage.getItem("token")).key;
+                    this.config = {
+                        headers: {
+                            Authorization: "token " + this.token
+                        }
+                    }
+                    axios.get(this.url+"users/actual/",this.config).then((response) => {
+                        localStorage.setItem('user', JSON.stringify(response.data));
+                        window.location.href = '/' 
+                    })
                 })
             }
         }

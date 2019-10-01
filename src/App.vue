@@ -4,10 +4,25 @@
       <v-toolbar-title class="headline text-uppercase">
         <span class="font-weight-light">Tiendita</span>
       </v-toolbar-title>
+      <div style="margin-left:15px;" text target="_blank">
+        <router-link to="/">
+          <span class="mr-2">Inventario</span>
+        </router-link>
+        <router-link to="/ventas" v-if="admin">
+          <span class="mr-2">Ventas</span>
+        </router-link>
+        <router-link to="/register" v-if="admin">
+          <span class="mr-2">Registro</span>
+        </router-link>
+      </div>
       <v-spacer></v-spacer>
       <div text target="_blank">
-        <router-link to="/login" v-if="!conectado"> <span class="mr-2">Iniciar Sesión</span></router-link>
-        <router-link to=""><span class="mr-2" v-if="conectado" @click="cerrarSesion()">Cerrar Sesión</span></router-link>
+        <router-link to="/login" v-if="!conectado">
+          <span class="mr-2">Iniciar Sesión</span>
+        </router-link>
+        <router-link to>
+          <span class="mr-2" v-if="conectado" @click="cerrarSesion()">Cerrar Sesión</span>
+        </router-link>
       </div>
     </v-app-bar>
 
@@ -24,22 +39,22 @@ import axios from "axios";
 export default Vue.extend({
   name: "App",
   data: () => ({
-    conectado:false,
-    config: {
-      headers: {
-        Authorization: "token af81d0628ae7af0ea728eb7cdcec5eb69dc2a660"
-      }
-    }
+    conectado: false,
+    admin: false
   }),
-  mounted(){
-    const loggedIn = localStorage.getItem('token');
-    if(loggedIn){
-      this.conectado=true;
+  mounted() {
+    const loggedIn = localStorage.getItem("token");
+    if (loggedIn) {
+      if (JSON.parse(localStorage.getItem("user")).rol == 1) {
+        this.admin = true;
+      }
+      this.conectado = true;
     }
   },
   methods: {
     cerrarSesion() {
       localStorage.removeItem("token");
+      localStorage.removeItem("user");
       window.location.href = "/login";
     }
   }

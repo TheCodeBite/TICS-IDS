@@ -58,6 +58,11 @@ export default {
       })
     }
   },
+  close() {
+      this.dialog = false;
+      this.dialog2= false;
+      this.dialog3= false;
+    },
   mounted () {
     navigator.mediaDevices.getUserMedia({ video: true }).then(mediaStream => {
       this.mediaStream = mediaStream;
