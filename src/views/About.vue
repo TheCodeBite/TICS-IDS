@@ -78,12 +78,21 @@ export default {
       url : "https://bodegaapi.herokuapp.com/api/v1/",
       config: "",
       token: "",
-      mediaStream: null
+      mediaStream: null,
+      admin: false
     };
   },
   methods: {
     guardarProducto(){
-      let parama = { image_url: this.image_url, code: this.code, name: this.name, description: this.description, quantity: this.quantity, price: this.price, tax: this.tax }
+      let parama = { 
+        "image_url": this.image_url, 
+        "code": parseInt(this.code), 
+        "name": this.name, 
+        "description": this.description, 
+        "quantity": parseInt(this.quantity), 
+        "price": parseInt(this.price), 
+        "tax": parseInt(this.tax) 
+      }
     
       console.log("espero que esto funcione ");
       console.log(parama);

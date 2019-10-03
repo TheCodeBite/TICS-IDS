@@ -6,7 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import './registerServiceWorker';
 
 import firebase from 'firebase';
-import vuetify from 'vuetify';
+import vuetify from './plugins/vuetify';
 
 Vue.config.productionTip = false;
 
