@@ -42,23 +42,12 @@
         <!-- MODAL DE CAMARA -->
         <template>
           <v-row justify="center">
-            
-
             <v-dialog
               v-model="dialogazo"
-              max-width="900px"
+              max-width="500px"
             >
               <v-card>
-                <div id="app">
-                  <div class="camera-modal">
-                    <video ref="video" class="camera-stream"/>
-                    <div class="camera-modal-container">
-                          <span @click="capture" class="take-picture-button mdl-button mdl-js-button mdl-button--fab mdl-button--colored">
-                            <i class="material-icons">camera</i>
-                          </span>
-                      </div>
-                  </div>
-                </div>
+                
 
                 <v-card-actions>
                   <div class="flex-grow-1"></div>
@@ -89,82 +78,6 @@
           <template v-slot:activator="{ on }">
             <button class="btn btn-primary btn-sm" v-on="on">Agregar Producto</button>
           </template>
-          <v-card>
-            <v-card-title>
-              <span class="headline">Nuevo Producto</span>
-            </v-card-title>
-
-            <v-card-text>
-              <v-container>
-                <v-text-field
-                  v-model="name"
-                  :counter="20"
-                  :rules="nameRules"
-                  label="Nombre del producto"
-                  required
-                ></v-text-field>
-
-                <v-text-field
-                  :counter="20"
-                  :rules="nameRules"
-                  label="Descripción"
-                  v-model="description"
-                  required
-                ></v-text-field>
-
-                <v-text-field v-model="code" :counter="20" :rules="nameRules" label="Code" required></v-text-field>
-
-                <v-row>
-                  <v-col cols="12" md="6">
-                    <v-file-input 
-                    accept="image/*"
-                    v-model="image_url"
-                    prepend-icon="mdi-camera"
-                    label="Seleccionar"></v-file-input>
-                  </v-col>
-
-                  <v-col cols="12" md="6">
-                    <v-btn
-                      color="primary"
-                      dark
-                      @click.stop="dialogazo = true"
-                    >
-                      Tomar Foto
-                    </v-btn>
-                  </v-col>
-                </v-row>
-                
-                <v-row>
-                  <v-col cols="12" md="4">
-                    <v-text-field 
-                      v-model="quantity" 
-                      type="number" 
-                      label="Cantidad"/>
-                  </v-col>
-
-                  <v-col cols="12" md="4">
-                    <v-text-field 
-                      v-model="price" 
-                      type="number" 
-                      label="Precio"/>
-                  </v-col>
-
-                  <v-col cols="12" md="4">
-                    <v-text-field 
-                      v-model="tax" 
-                      type="number" 
-                      label="Tax"/>
-                  </v-col>
-                </v-row>
-              </v-container>
-            </v-card-text>
-
-            <v-card-actions>
-              <div class="flex-grow-1"></div>
-              <v-btn color="blue darken-1" text @click="close">Cancelar</v-btn>
-              <v-btn color="blue darken-1" text @click="guardarProducto()">Agregar</v-btn>
-            </v-card-actions>
-          </v-card>
         </v-dialog>
       </v-card-title>
       <v-data-table
@@ -218,6 +131,39 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
+
+          <v-dialog v-model="dialog_detalles" max-width="250px">
+            <template v-slot:activator="{ on }">
+              <v-icon small class="mr-2" title="Vender" v-on="on">info</v-icon>
+            </template>
+            <v-card
+              class="mx-auto"
+            >
+              <v-img
+              class="black--text"
+              height="300px"
+              v-bind:src="item.image_url"
+              >
+
+              <v-card-title
+              class="align-end fill-height"
+              >
+                {{item.name}}
+              </v-card-title>
+
+              </v-img>
+
+              <v-card-text>
+                {{item.description}}<p>
+                
+              </v-card-text>
+              <v-card-actions>
+                <div class="flex-grow-1"></div>
+                <v-btn color="blue darken-1" text @click="close">Cancelar</v-btn>
+                <v-btn color="blue darken-1" text @click="detalles(item)">Vender</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
         </template>
       </v-data-table>
       <div class="text-center pt-2">
@@ -237,6 +183,7 @@ export default {
     return {
       dialog: false,
       dialog2: false,
+      dialog_detalles: false,
       dialog3: false,
       cantidad:null,
       admin:false,
@@ -273,6 +220,7 @@ export default {
   },
   mounted() {
     this.token = JSON.parse(localStorage.getItem("token")).key;
+    console.log("este es mi token" + this.token)
     if(JSON.parse(localStorage.getItem("user")).rol==1){
       this.admin = true
     }
@@ -299,6 +247,8 @@ export default {
     verInventario() {
       axios.get(this.url + "inventories/", this.config).then(response => {
         this.desserts = response.data;
+        console.log("PRODUCTO")
+        console.log(response)
       });
     },
     capture () {
@@ -334,7 +284,7 @@ export default {
       })
     },
     guardarProducto(){
-      let parama = { image_url: this.image_url.name, code: this.code, name: this.name, description: this.description, quantity: this.quantity, price: this.price, tax: this.tax }
+      let parama = { image_url: this.image_url, code: this.code, name: this.name, description: this.description, quantity: this.quantity, price: this.price, tax: this.tax }
     
       console.log("espero que esto funcione ");
       console.log(parama);
