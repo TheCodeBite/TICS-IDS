@@ -45,9 +45,12 @@ export default Vue.extend({
   mounted() {
     const loggedIn = localStorage.getItem("token");
     if (loggedIn) {
-      if (JSON.parse(localStorage.getItem("user")).rol == 1) {
-        this.admin = true;
+      if(localStorage.getItem("user")){
+        if (JSON.parse(localStorage.getItem("user") || '{}').rol == 1) {
+          this.admin = true;
+        }
       }
+      
       this.conectado = true;
     }
   },
