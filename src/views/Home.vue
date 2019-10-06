@@ -1,31 +1,7 @@
 <template>
   <v-container>
-    <!-- Modal -->
-    <div
-      class="modal fade"
-      id="exampleModalLong"
-      tabindex="-1"
-      role="dialog"
-      aria-labelledby="exampleModalLongTitle"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">...</div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
-          </div>
-        </div>
-      </div>
-    </div>
     <v-card>
+
       <v-card-title style="background-color:#5CD5C6">
         Productos
         <div class="flex-grow-1"></div>
@@ -38,48 +14,9 @@
           hide-details
         ></v-text-field>
         <div class="flex-grow-1"></div>
-
-        <!-- MODAL DE CAMARA -->
-        <template>
-          <v-row justify="center">
-            <v-dialog
-              v-model="dialogazo"
-              max-width="500px"
-            >
-              <v-card>
-                
-
-                <v-card-actions>
-                  <div class="flex-grow-1"></div>
-
-                  <v-btn
-                    color="green darken-1"
-                    text
-                    @click="dialog = false"
-                  >
-                    Capturar
-                  </v-btn>
-
-                  <v-btn
-                    color="green darken-1"
-                    text
-                    @click="dialog = false"
-                  >
-                    Cancelar
-                  </v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-          </v-row>
-</template>
-        
-        <!---MODAL DE AGREGAR PRODUCTO-->
-        <v-dialog v-if="admin" v-model="dialog" max-width="500px">
-          <template v-slot:activator="{ on }">
-            <button class="btn btn-primary btn-sm" v-on="on">Agregar Producto</button>
-          </template>
-        </v-dialog>
+        <router-link to="/about" class="btn btn-primary btn-sm" >Agregar Producto</router-link>
       </v-card-title>
+
       <v-data-table
         :headers="headers"
         :items="desserts"
@@ -111,6 +48,7 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
+
           <v-dialog v-if="admin" v-model="dialog3" max-width="250px">
             <template v-slot:activator="{ on }">
               <v-icon small class="mr-2" title="Borrar" v-on="on">delete</v-icon>
@@ -134,7 +72,7 @@
 
           <v-dialog v-model="dialog_detalles" max-width="250px">
             <template v-slot:activator="{ on }">
-              <v-icon small class="mr-2" title="Vender" v-on="on">info</v-icon>
+              <v-icon small class="mr-2" title="Detalles" v-on="on">info</v-icon>
             </template>
             <v-card
               class="mx-auto"
@@ -240,6 +178,12 @@ export default {
         console.log("PRODUCTO")
         console.log(response)
       });
+    },
+    close(){
+      dialog= false,
+      dialog2= false,
+      dialog_detalles= false,
+      dialog3= false
     },
     guardarProducto(){
       let parama = { image_url: this.image_url, code: this.code, name: this.name, description: this.description, quantity: this.quantity, price: this.price, tax: this.tax }
