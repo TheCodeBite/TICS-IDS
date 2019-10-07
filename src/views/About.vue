@@ -75,7 +75,7 @@ export default {
       price: "",
       tax: "",
 
-      url : "https://bodegaapi.herokuapp.com/api/v1/",
+      url : "",
       config: "",
       token: "",
       mediaStream: null,
@@ -84,7 +84,7 @@ export default {
   },
   methods: {
     guardarProducto(){
-      let parama = { 
+      let params = { 
         "image_url": this.image_url, 
         "code": parseInt(this.code), 
         "name": this.name, 
@@ -95,9 +95,12 @@ export default {
       }
     
       console.log("espero que esto funcione ");
-      console.log(parama);
+      console.log(params);
+      console.log("ruta img " + this.url)
+      console.log("config")
+      console.log(this.config)
 
-      axios.post(this.url + "products/", parama, this.config).then((response) => {
+      axios.post(this.url + "products/", params, this.config).then((response) => {
         console.log("Producto agregado");
         console.log(response)
       });
@@ -120,9 +123,9 @@ export default {
               .ref()
               .child(snapshop.ref.location.path)
               .getDownloadURL()
-              .then(url => {
-                this.image_url = url;
-                console.log("url ====", url);
+              .then(ruta => {
+                this.image_url = ruta;
+                console.log("url ====", ruta);
                 //Insertamos en una tabla el id del usuario, la foto y  descripción.
               })
               .catch(error => {
@@ -152,6 +155,7 @@ export default {
     this.dialog3 = false;
   },
   mounted() {
+    this.url = "https://bodegaapi.herokuapp.com/api/v1/";
     navigator.mediaDevices
       .getUserMedia({ video: true })
       .then(mediaStream => {
@@ -168,9 +172,6 @@ export default {
       if(JSON.parse(localStorage.getItem("user")).rol==1){
         this.admin = true
       }
-
-      this.url = "https://bodegaapi.herokuapp.com/api/v1/";
-
       this.config = {
         headers: {
           Authorization: "token " + this.token

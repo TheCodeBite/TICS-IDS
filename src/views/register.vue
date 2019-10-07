@@ -21,7 +21,7 @@
           <option value="1">Cajero</option>
           <option value="2">Administrador</option>
         </select>
-        </p>
+        <p/>
 
         <input type="button" class="form-control btn btn-primary" value="Registrar" @click="registrar()">
       </div>
