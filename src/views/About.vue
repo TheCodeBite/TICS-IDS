@@ -34,7 +34,7 @@
           <input type="number" v-model="code" class="form-control" placeholder="21" />
         </div>
 
-        <button type="button" class="btn btn-primary btn-sm btn-block bt-sm" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">Tomar foto</button>
+        <button type="button" class="btn btn-primary btn-sm btn-block bt-sm" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" @click="btn_tomar_foto()">Tomar foto</button>
         
           <div class="collapse" id="collapseExample">
             <div id="app">
@@ -75,9 +75,9 @@ export default {
       price: "",
       tax: "",
 
-      url : "",
-      config: "",
-      token: "",
+      url : '',
+      config: '',
+      token: '',
       mediaStream: null,
       admin: false
     };
@@ -103,6 +103,18 @@ export default {
       axios.post(this.url + "products/", params, this.config).then((response) => {
         console.log("Producto agregado");
         console.log(response)
+      });
+    },
+    btn_tomar_foto(){
+      navigator.mediaDevices
+      .getUserMedia({ video: true })
+      .then(mediaStream => {
+        this.mediaStream = mediaStream;
+        this.$refs.video.srcObject = mediaStream;
+        this.$refs.video.play();
+      })
+      .catch(error => {
+        console.error("getUserMedia() error:", error);
       });
     },
     capture() {
@@ -156,27 +168,17 @@ export default {
   },
   mounted() {
     this.url = "https://bodegaapi.herokuapp.com/api/v1/";
-    navigator.mediaDevices
-      .getUserMedia({ video: true })
-      .then(mediaStream => {
-        this.mediaStream = mediaStream;
-        this.$refs.video.srcObject = mediaStream;
-        this.$refs.video.play();
-      })
-      .catch(error => {
-        console.error("getUserMedia() error:", error);
-      });
-
-      this.token = JSON.parse(localStorage.getItem("token")).key;
+    this.token = JSON.parse(localStorage.getItem("token")).key;
       console.log("este es mi token" + this.token)
       if(JSON.parse(localStorage.getItem("user")).rol==1){
         this.admin = true
       }
-      this.config = {
-        headers: {
-          Authorization: "token " + this.token
-        }
+
+    this.config = {
+      headers: {
+        Authorization: 'token ' + this.token
       }
+    }
   },
   destroyed() {
     const tracks = this.mediaStream.getTracks();
