@@ -86,12 +86,12 @@ export default {
     guardarProducto(){
       let params = { 
         "image_url": this.image_url, 
-        "code": parseInt(this.code), 
+        "code": this.code, 
         "name": this.name, 
         "description": this.description, 
-        "quantity": parseInt(this.quantity), 
-        "price": parseInt(this.price), 
-        "tax": parseInt(this.tax) 
+        "quantity": this.quantity, 
+        "price": this.price, 
+        "tax": this.tax 
       }
     
       console.log("espero que esto funcione ");

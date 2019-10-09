@@ -18,8 +18,8 @@
 
         <label>Rol</label>
         <select v-model="rol" class="form-control">
-          <option value="1">Cajero</option>
-          <option value="2">Administrador</option>
+          <option value="2">Cajero</option>
+          <option value="1">Administrador</option>
         </select>
         <p/>
 
@@ -61,7 +61,7 @@ export default {
         console.log("Estos son los parametros" );
         console.log(params);
         
-        axios.post(this.url + "users/", params, this.config).then((response) => {
+        axios.post(this.url + "users/",params, this.config).then((response) => {
             console.log(response); 
         });
       }
