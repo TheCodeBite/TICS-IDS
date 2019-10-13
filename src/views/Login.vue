@@ -74,7 +74,8 @@
                     }                  
                     axios.get(this.url+"users/actual/",this.config).then((response) => {
                         response.data['send_id']=this.notificacionToken
-                        axios.update(this.url+"users/",response.data).then((response) => {
+                        console.log(response.data)
+                        axios.put(this.url+"users/"+response.data['id']+"/",response.data,this.config).then((response) => {
                             localStorage.setItem('user', JSON.stringify(response.data));
                             window.location.href = '/' 
                         })
