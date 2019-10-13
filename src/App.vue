@@ -6,7 +6,7 @@
       </v-toolbar-title>
       <div style="margin-left:15px;" text target="_blank">
         <router-link to="/">
-          <span class="mr-2">Inventario</span>
+          <span class="mr-2" v-if="conectado">Inventario</span>
         </router-link>
         <router-link to="/ventas" v-if="admin">
           <span class="mr-2">Ventas</span>

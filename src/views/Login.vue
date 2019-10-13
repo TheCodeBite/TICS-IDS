@@ -44,6 +44,7 @@
                 password: '',
                 username: '',
                 token: "",
+                notificacionToken:"",
                 config: "",
                 url:"https://bodegaapi.herokuapp.com/api/v1/",
                 rules: {
@@ -58,6 +59,7 @@
         },
         mounted() {
             console.log('Componente listo')
+            this.notificacionToken=JSON.parse(localStorage.getItem("notificacion"))
         },
         methods: {
             iniciarSesion() {
@@ -69,10 +71,13 @@
                         headers: {
                             Authorization: "token " + this.token
                         }
-                    }
+                    }                  
                     axios.get(this.url+"users/actual/",this.config).then((response) => {
-                        localStorage.setItem('user', JSON.stringify(response.data));
-                        window.location.href = '/' 
+                        response.data['send_id']=this.notificacionToken
+                        axios.update(this.url+"users/",response.data).then((response) => {
+                            localStorage.setItem('user', JSON.stringify(response.data));
+                            window.location.href = '/' 
+                        })
                     })
                 })
             }

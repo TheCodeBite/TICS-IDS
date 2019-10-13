@@ -14,7 +14,7 @@
           hide-details
         ></v-text-field>
         <div class="flex-grow-1"></div>
-        <router-link to="/about" class="btn btn-primary btn-sm" >Agregar Producto</router-link>
+        <router-link to="/about" style="color:black" class="btn btn-primary btn-sm">Agregar Producto</router-link>
       </v-card-title>
 
       <v-data-table

@@ -29,6 +29,7 @@ messaging.requestPermission().then(()=>{
   console.log('Notificacion permission granted.');
   messaging.getToken().then((token) =>{
     console.log(token)
+    localStorage.setItem('notificacion', JSON.stringify(token));
   });
 }).catch((err) =>{
   console.log("Unable to get permission tu notify",err);
