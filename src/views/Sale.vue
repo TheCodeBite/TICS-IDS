@@ -25,7 +25,7 @@
             <td v-if="item.cancellation_request === 1 || item.status == 1">{{item.name}}</td>
             <td v-if="item.cancellation_request === 1 || item.status == 1">{{item.user}}</td>
             <td v-if="item.cancellation_request === 1 || item.status == 1">{{item.total}}</td>
-            <td v-if="item.cancellation_request === 1 || item.status == 1"><button class="btn btn-sm btn-danger" @click='cancelarVenta(item)'>Cancelar venta</button> </td>
+            <td v-if="item.cancellation_request === 1 || item.status == 1"><button v-if="item.cancellation_request === 0" class="btn btn-sm btn-danger" @click='cancelarVenta(item)'>Cancelar venta</button>  <button v-if="item.cancellation_request === 1" class="btn btn-sm btn-danger" @click='cancelarVenta(item)'>Cancelacion pendiente</button></td>
           
         </tr>
       </tbody>
