@@ -23,7 +23,8 @@
             <td v-if="item.status === 1">{{item.name}}</td>
             <td v-if="item.status === 1">{{item.user}}</td>
             <td v-if="item.status === 1">{{item.total}}</td>
-            <td v-if="item.status === 1"><button class="btn btn-sm btn-danger" @click='cancelarVenta(item)'>Cancelar venta</button> </td>
+            <td v-if="(item.status === 1) && !admin"><button class="btn btn-sm btn-danger" @click='notificarSolicitud(item)'>Solicitar cancelación</button> </td>
+            <td v-if="(item.status === 1) && admin" ><button class="btn btn-sm btn-danger" @click='cancelarVenta(item)'>Cancelar venta</button> </td>
           
         </tr>
       </tbody>
@@ -75,14 +76,38 @@ export default {
       console.log(params);
     },
     cancelarVenta(item){
-      item.status = 1;
+      /*item.status = 1;
       console.log(item.status)
       Axios.put(this.url + "sales/" + item.id + "/", item, this.config).then((response) => {
         console.log("dato editado")
         console.log(item)
+      })*/
+      console.log("Se canselo: ",item)  
+    },
+    notificarSolicitud(item){   
+      item.cancellation_request=1
+      console.log("Este quiere cancelar: ",item)
+      axios.put(this.url+"sales/"+item.id+"/",item,this.config).then((response) =>{
+        console.log(response.data)
+
+        let configNoti={
+          headers: {
+            Authorization: "key=AIzaSyABcbCVjWB1VEwFJO_Z19p62zuNS87yqsY"
+          }
+        }
+        let params = {
+          "to": "fwZ6QR5bkt4:APA91bGT4IMg9GBtzuOABBEqhpTMB4FmCxVeo9IYJBCl0XYtfFFQfSwoicpse-1ZsOAW9HY4-WJIfkJBBlzouMZ72nQlm6a1qIe-SNpXBzV5XLM08RdIcmreHMAes4_iF591bnDMe-T_",
+          "notification": {
+            "title": "Solicitud de cancelación",
+            "body": "Haz click para cancelar.",
+            "icon": "./img/icons/android-chrome-192x192.png",
+            "click_action": "/ventas"
+          }
+        }
+        axios.post("https://fcm.googleapis.com/fcm/send", params,this.configNoti).then((response) => {
+          console.log("Solicito cancelar")
+        })
       })
-      console.log("este es el item")
-      
     }
   }
 };
