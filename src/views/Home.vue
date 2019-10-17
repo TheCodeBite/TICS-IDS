@@ -1,130 +1,138 @@
 <template>
-  <v-container>
-    <v-card>
+  <div class="container">
+    <v-alert v-model="alert" dismissible border="left" elevation="2" colored-border type="info">
+      {{alerta_informacion}}
+    </v-alert>
 
-      <v-card-title style="background-color:#5CD5C6">
-        Productos
-        <div class="flex-grow-1"></div>
-        <v-text-field
-          style="margin-bottom:15px;"
-          v-model="search"
-          append-icon="search"
-          label="Buscar"
-          single-line
-          hide-details
-        ></v-text-field>
-        <div class="flex-grow-1"></div>
-        <router-link to="/about" style="color:black" class="btn btn-primary btn-sm">Agregar Producto</router-link>
-      </v-card-title>
+    <v-btn to="/about" absolute dark fab top right color="pink"> <p/>
+      <v-icon>mdi-plus</v-icon>
+    </v-btn>
+    <table class="table">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Nombre</th>
+          <th scope="col">Stock</th>
+          <th scope="col">Precio($)</th>
+          <th scope="col">IVA</th>
+          <th scope="col">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="item in items">
+          <td>{{item.name}}</td>
+          <td>{{item.quantity}}</td>
+          <td>{{item.price}}</td>
+          <td>{{item.tax}}</td>
+          <td>
+            <v-icon
+              small
+              class="mr-2" title="Borrar" @click="getProduct(item)" data-toggle="modal" data-target="#modalDelete">delete</v-icon>
+            <v-icon small class="mr-2" title="Detalles" data-toggle="modal" data-target="#modalInformacion" @click="getProduct(item)">info</v-icon>
+            <v-icon small class="mr-2" title="Vender" data-toggle="modal" data-target="#modalStore" @click="getProduct(item)">mdi-tag</v-icon>
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
-      <v-data-table
-        :headers="headers"
-        :items="desserts"
-        :search="search"
-        :page.sync="page"
-        :items-per-page="itemsPerPage"
-        hide-default-footer
-        class="elevation-1"
-        @page-count="pageCount = $event"
-      >
-        <template v-slot:item.action="{ item }">
-          <v-dialog v-model="dialog2" max-width="250px">
-            <template v-slot:activator="{ on }">
-              <v-icon small class="mr-2" title="Vender" v-on="on">mdi-tag</v-icon>
-            </template>
-            <v-card>
-              <v-card-title>
-                <span class="headline">Cantidad</span>
-              </v-card-title>
+    <!--MODAL VENDER-->
+    <div class="modal fade" id="modalStore" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel" >Vender {{detailproduct.name}}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <label><h3>Cantidad</h3></label>
+              <input type="text" class="form-control" v-model="cantidad" placeholder="12">
+            </form>
 
-              <v-card-text>
-                <v-text-field v-model="cantidad" type="number" label="Cantidas"></v-text-field>
-              </v-card-text>
-
-              <v-card-actions>
-                <div class="flex-grow-1"></div>
-                <v-btn color="blue darken-1" text @click="close">Cancelar</v-btn>
-                <v-btn color="blue darken-1" text @click="vender(item)">Vender</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-
-          <v-dialog v-if="admin" v-model="dialog3" max-width="250px">
-            <template v-slot:activator="{ on }">
-              <v-icon small class="mr-2" title="Borrar" v-on="on">delete</v-icon>
-            </template>
-            <v-card>
-              <v-card-title>
-                <span class="headline">Cantidad</span>
-              </v-card-title>
-
-              <v-card-text>
-                <v-text-field v-model="cantidad" type="number" label="Cantidas"></v-text-field>
-              </v-card-text>
-
-              <v-card-actions>
-                <div class="flex-grow-1"></div>
-                <v-btn color="blue darken-1" text @click="close">Cancelar</v-btn>
-                <v-btn color="blue darken-1" text @click="deleteItem(item)">Borrar</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-
-          <v-dialog v-model="dialog_detalles" max-width="250px">
-            <template v-slot:activator="{ on }">
-              <v-icon small class="mr-2" title="Detalles" v-on="on">info</v-icon>
-            </template>
-            <v-card
-              class="mx-auto"
-            >
-              <v-img
-              class="black--text"
-              height="300px"
-              v-bind:src="item.image_url"
-              >
-
-              <v-card-title
-              class="align-end fill-height"
-              >
-                {{item.name}}
-              </v-card-title>
-
-              </v-img>
-
-              <v-card-text>
-                {{item.description}}
-                
-              </v-card-text>
-              <v-card-actions>
-                <div class="flex-grow-1"></div>
-                <v-btn color="blue darken-1" text @click="close">Cancelar</v-btn>
-                <v-btn color="blue darken-1" text @click="detalles(item)">Vender</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-        </template>
-      </v-data-table>
-      <div class="text-center pt-2">
-        <v-pagination v-model="page" :length="pageCount"></v-pagination>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal" @click="vender(detailproduct)" >Vender</button>
+          </div>
+        </div>
       </div>
-    </v-card>
-  </v-container>
+    </div>
+
+    <!-- MODAL DETALLES -->
+    <div class="modal fade" id="modalInformacion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel" >Detalles de {{detailproduct.name}}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="card bg-dark text-white">
+              <img v-bind:src="detailproduct.image_url" class="card-img" >
+              <div class="card-img-overlay">
+                <h5 class="card-title">{{detailproduct.name}}</h5>
+                <p class="card-text">{{detailproduct.description}}</p>
+              </div>
+            </div>  
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL DELETE -->
+    <div class="modal fade" id="modalDelete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel" >Borrado de {{detailproduct.name}}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <label><h3>Cantidad</h3></label>
+              <input type="text" class="form-control" v-model="cantidad" placeholder="12">
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal" @click="deleteItem(detailproduct)" >Eliminar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
 </template>
 
+
+
 <script>
-require('material-design-lite')
-import firebase from 'firebase';
+require("material-design-lite");
+import firebase from "firebase";
 import axios from "axios";
 export default {
-  name: 'app',
+  name: "app",
   data() {
     return {
+      items: [],
+      detailproduct: [],
+      cantidad: '',
+      alerta_informacion: '',
+      alert: false,
+
       dialog: false,
       dialog2: false,
       dialog_detalles: false,
       dialog3: false,
-      cantidad:null,
-      admin:false,
+      admin: false,
       page: 1,
       pageCount: 0,
       itemsPerPage: 10,
@@ -157,47 +165,56 @@ export default {
   },
   mounted() {
     this.token = JSON.parse(localStorage.getItem("token")).key;
-    console.log("este es mi token" + this.token)
-    if(JSON.parse(localStorage.getItem("user")).rol==1){
-      this.admin = true
+    console.log("este es mi token" + this.token);
+    if (JSON.parse(localStorage.getItem("user")).rol == 1) {
+      this.admin = true;
     }
-    
+
     this.url = "https://bodegaapi.herokuapp.com/api/v1/";
     this.config = {
       headers: {
         Authorization: "token " + this.token
       }
     };
-    
+
     this.verInventario();
   },
   methods: {
     verInventario() {
       axios.get(this.url + "inventories/", this.config).then(response => {
         this.desserts = response.data;
-        console.log("PRODUCTO")
-        console.log(response)
+        console.log("PRODUCTO");
+        console.log(response);
+        this.items = response.data;
       });
     },
-    close(){
-      dialog= false,
-      dialog2= false,
-      dialog_detalles= false,
-      dialog3= false
+    close() {
+      (dialog = false),
+        (dialog2 = false),
+        (dialog_detalles = false),
+        (dialog3 = false);
     },
-    guardarProducto(){
-      let parama = { image_url: this.image_url, code: this.code, name: this.name, description: this.description, quantity: this.quantity, price: this.price, tax: this.tax }
-    
-      console.log("espero que esto funcione ");
-      console.log(parama);
+    getProduct(item){
+      this.cantidad = ""
+      this.detailproduct = []
+      this.detailproduct = item
+      console.log("este es el producto obtenido " + item.name)
+      console.log("imagen " + item.image_url)
+    },
+    guardarProducto(item) {
 
-      axios.post(this.url + "products/", parama, this.config).then((response) => {
+      console.log("espero que esto funcione ");
+      console.log(item);
+
+      axios.post(this.url + "products/", parama, this.config).then(response => {
         console.log("Producto agregado");
-        console.log(response)
+        console.log(response);
+        alerta_informacion = "Producto guardado con exito!"
+        alert = true
       });
     },
     vender(item) {
-        let params = {
+      let params = {
             "id": item.id,
             "price": item.price,
             "tax": item.tax,
@@ -206,31 +223,39 @@ export default {
             "acction": 2,
             "quantity": parseInt(this.cantidad)
         };
-        console.log(params)
-        axios.put(this.url + "inventories/venta/"+item.id+"/", params, this.config)
-            .then(response => {
-            console.log(response.data)
-            });
-        this.verInventario();
-        this.dialog2= false;
+
+      item.quantity = parseInt(this.cantidad)
+      console.log(item);
+      axios.put(
+          this.url + "inventories/venta/" + item.id + "/",
+          params,
+          this.config
+        ).then(response => {
+          this.alert = true;
+          this.alerta_informacion = "Se ha realizado la venta de " + this.cantidad + " producto(s) de " + item.name + " con exito!!";
+        });
+      this.verInventario();
+      this.dialog2 = false;
     },
     deleteItem(item) {
-        let c=item.quantity - this.cantidad
-        let params = {
-            "id": item.id,
-            "price": item.price,
-            "tax": item.tax,
-            "product": item.product,
-            "user": item.user,
-            "quantity": c
-        };
-        console.log(params)
-        axios.put(this.url + "inventories/"+item.id+"/", params, this.config)
-            .then(response => {
-            console.log(response.data)
-            });
-        this.verInventario();
-        this.dialog3= false;
+      let c = item.quantity - this.cantidad;
+      let params = {
+        id: item.id,
+        price: item.price,
+        tax: item.tax,
+        product: item.product,
+        user: item.user,
+        quantity: c
+      };
+      axios
+        .put(this.url + "inventories/" + item.id + "/", item, this.config)
+        .then(response => {
+          console.log(response.data);
+          this.alert = true;
+          this.alerta_informacion = "Se han eliminado " +  this.cantidad + " producto(s) de " + item.name + " con exito!!!";
+        });
+      this.verInventario();
+      this.dialog3 = false;
     }
   }
 };

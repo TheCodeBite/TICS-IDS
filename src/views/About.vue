@@ -1,5 +1,9 @@
 <template>
   <div class="container" v-if="admin">
+    <v-alert v-model="alert" dismissible border="left" elevation="2" colored-border type="info">
+      {{alerta_informacion}}
+    </v-alert>
+
     <form>
       <div class="form-row">
         <div class="form-group col-md-6">
@@ -16,7 +20,7 @@
       <div class="form-row">
         <div class="form-group col-md-3">
           <label>Cantidad</label>
-          <input type="number" v-model="quantity" class="form-control" value="45">
+          <input type="number" v-model="quantity" class="form-control" value="45" placeholder="12">
         </div>
 
         <div class="form-group col-md-3">
@@ -67,6 +71,9 @@ export default {
   components: {},
   data() {
     return {
+      alerta_informacion: '',
+      alert: false,
+
       image_url: "",
       code: "",
       name: "",
@@ -101,8 +108,8 @@ export default {
       console.log(this.config)
 
       axios.post(this.url + "products/", params, this.config).then((response) => {
-        console.log("Producto agregado");
-        console.log(response)
+        this.alerta_informacion = "Producto " + params.name  + " Agregado con exito!!";
+        this.alert = true;
       });
     },
     btn_tomar_foto(){
@@ -117,6 +124,10 @@ export default {
         console.error("getUserMedia() error:", error);
       });
     },
+    stop() {
+      console.log("stop camera")
+      return mediaStream.srcObject && mediaStream.srcObject.getTracks().map(t => t.stop());    
+    },
     capture() {
       const mediaStreamTrack = this.mediaStream.getVideoTracks()[0];
       const imageCapture = new window.ImageCapture(mediaStreamTrack);
@@ -130,6 +141,8 @@ export default {
           .put(blob)
           .then(snapshop => {
             console.log("snapshop file ====", snapshop);
+            console.log("stop camera")
+            mediaStreamTrack.srcObject && mediaStreamTrack.srcObject.getTracks().map(t => t.stop());  
             firebase
               .storage()
               .ref()
