@@ -48,6 +48,12 @@
             <form>
               <label><h3>Cantidad</h3></label>
               <input type="text" class="form-control" v-model="cantidad" placeholder="12">
+
+              <label><h3>Método de pago</h3></label>
+              <select v-model="metodo_pago" class="form-control">
+                <option value="1">Tarjeta</option>
+                <option value="2">Efectivo</option>
+              </select>
             </form>
 
           </div>
@@ -126,6 +132,7 @@ export default {
       detailproduct: [],
       cantidad: '',
       alerta_informacion: '',
+      metodo_pago: '',
       alert: false,
 
       dialog: false,
@@ -225,14 +232,17 @@ export default {
         };
 
       item.quantity = parseInt(this.cantidad)
-      console.log(item);
       axios.put(
           this.url + "inventories/venta/" + item.id + "/",
           params,
           this.config
         ).then(response => {
-          this.alert = true;
-          this.alerta_informacion = "Se ha realizado la venta de " + this.cantidad + " producto(s) de " + item.name + " con exito!!";
+          let total = parseInt(this.cantidad) * parseFloat(item.price)
+          let sale = { "product": response.data.product, "user": response.data.user, "quantity": this.cantidad, "discount": 0, "total": total, "payment_method": this.metodo_pago}
+          axios.post(this.url + "sales/",sale, this.config).then(respuesta => {
+            this.alert = true;
+            this.alerta_informacion = "Se ha realizado la venta de " + this.cantidad + " producto(s) de " + item.name + " con exito!!";       
+          }) 
         });
       this.verInventario();
       this.dialog2 = false;

@@ -40,7 +40,7 @@ export default {
         email: '',
         password: '',
         rol: '',
-        url: "",
+        url: '',
         config: "",
     };
   },

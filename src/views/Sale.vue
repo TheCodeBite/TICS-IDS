@@ -1,7 +1,9 @@
 <template>
   <div class="container">
     <h1>Ventas</h1>
-    <table class="table table-bordered">
+
+    <!-- ADMINISTRADORES -->
+    <table class="table table-bordered" v-if="usuario.rol === 1" >
       <thead class="thead-dark">
         <th scope="col">Quantity</th>
         <th scope="col">Discount</th>
@@ -16,14 +18,42 @@
       <tbody>
         <tr v-for="item in items">
           
-            <td v-if="item.status === 1">{{item.quantity}}</td>
-            <td v-if="item.status === 1">{{item.discount}}</td>
-            <td v-if="item.status === 1">{{item.date}}</td>
-            <td v-if="item.status === 1">{{item.payment_method}}</td>
-            <td v-if="item.status === 1">{{item.name}}</td>
-            <td v-if="item.status === 1">{{item.user}}</td>
-            <td v-if="item.status === 1">{{item.total}}</td>
-            <td v-if="item.status === 1"><button class="btn btn-sm btn-danger" @click='cancelarVenta(item)'>Cancelar venta</button> </td>
+            <td v-if="item.cancellation_request === 1 || item.status == 1">{{item.quantity}}</td>
+            <td v-if="item.cancellation_request === 1 || item.status == 1">{{item.discount}}</td>
+            <td v-if="item.cancellation_request === 1 || item.status == 1">{{item.date}}</td>
+            <td v-if="item.cancellation_request === 1 || item.status == 1">{{item.payment_method}}</td>
+            <td v-if="item.cancellation_request === 1 || item.status == 1">{{item.name}}</td>
+            <td v-if="item.cancellation_request === 1 || item.status == 1">{{item.user}}</td>
+            <td v-if="item.cancellation_request === 1 || item.status == 1">{{item.total}}</td>
+            <td v-if="item.cancellation_request === 1 || item.status == 1"><button class="btn btn-sm btn-danger" @click='cancelarVenta(item)'>Cancelar venta</button> </td>
+          
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- SOLO CAJEROS -->
+    <table class="table table-bordered" v-if="usuario.rol === 2" >
+      <thead class="thead-dark">
+        <th scope="col">Quantity</th>
+        <th scope="col">Discount</th>
+        <th scope="col">Fecha Compra</th>
+        <th scope="col">Metodo de pago</th>
+        <th scope="col">Producto</th>
+        <th scope="col">Usuario</th>
+        <th scope="col">Total</th>
+        <th scope="col">Venta</th>
+      </thead>
+
+      <tbody>
+        <tr v-for="item in items">
+            <td v-if="item.user === usuario.id && item.cancellation_request == 0">{{item.quantity}}</td>
+            <td v-if="item.user === usuario.id && item.cancellation_request == 0">{{item.discount}}</td>
+            <td v-if="item.user === usuario.id && item.cancellation_request == 0">{{item.date}}</td>
+            <td v-if="item.user === usuario.id && item.cancellation_request == 0">{{item.payment_method}}</td>
+            <td v-if="item.user === usuario.id && item.cancellation_request == 0">{{item.name}}</td>
+            <td v-if="item.user === usuario.id && item.cancellation_request == 0">{{item.user}}</td>
+            <td v-if="item.user === usuario.id && item.cancellation_request == 0">{{item.total}}</td>
+            <td v-if="item.user === usuario.id && item.cancellation_request == 0"><button class="btn btn-sm btn-danger" @click='cancelarVenta(item)'>Cancelar venta</button> </td>
           
         </tr>
       </tbody>
@@ -37,6 +67,8 @@ export default {
   name: "register",
   data() {
     return {
+      usuario: [],
+
       token: "",
       username: "",
       items: [],
@@ -51,6 +83,8 @@ export default {
     console.log("Componente listo");
     this.token = JSON.parse(localStorage.getItem("token")).key;
     this.url = "https://bodegaapi.herokuapp.com/api/v1/";
+    this.usuario = JSON.parse(localStorage.getItem("user"))
+    console.log("tu id es " + this.usuario.id + " rol " + this.usuario.rol)
 
     this.config = {
       headers: {
@@ -61,7 +95,9 @@ export default {
       this.items = response.data;
       console.log("VENTAS REALIZADASS")
       console.log(response.data);
-    });
+    }).catch (function (error){
+      console.log("algo salio mal papu")
+    }) ;
   },
   methods: {
     registrar() {

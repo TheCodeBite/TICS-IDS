@@ -97,7 +97,7 @@ export default {
         "name": this.name, 
         "description": this.description, 
         "quantity": this.quantity, 
-        "price": this.price, 
+        "price": c.price, 
         "tax": this.tax 
       }
     
