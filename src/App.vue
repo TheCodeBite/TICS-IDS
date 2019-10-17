@@ -9,7 +9,7 @@
           <span class="mr-2" v-if="conectado">Inventario</span>
         </router-link>
         <router-link to="/ventas">
-          <span class="mr-2">Ventas</span>
+          <span class="mr-2" v-if="conectado">Ventas</span>
         </router-link>
         <router-link to="/register" v-if="admin">
           <span class="mr-2">Registro</span>

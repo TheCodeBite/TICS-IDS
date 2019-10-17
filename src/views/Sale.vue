@@ -53,7 +53,7 @@
             <td v-if="item.user === usuario.id && item.cancellation_request == 0">{{item.name}}</td>
             <td v-if="item.user === usuario.id && item.cancellation_request == 0">{{item.user}}</td>
             <td v-if="item.user === usuario.id && item.cancellation_request == 0">{{item.total}}</td>
-            <td v-if="item.user === usuario.id && item.cancellation_request == 0"><button class="btn btn-sm btn-danger" @click='notificarSolicitud(item)'>Solicitar</button> </td>
+            <td v-if="item.user === usuario.id && item.cancellation_request == 0"><button class="btn btn-sm btn-danger" @click='notificarSolicitud(item)'>Solicitar cancelación</button> </td>
           
         </tr>
       </tbody>
@@ -111,13 +111,11 @@ export default {
       console.log(params);
     },
     cancelarVenta(item){
-      /*item.status = 1;
-      console.log(item.status)
-      Axios.put(this.url + "sales/" + item.id + "/", item, this.config).then((response) => {
-        console.log("dato editado")
+      item.status = 2;
+      console.log("Se canselo: ",item)
+      axios.put(this.url + "sales/cancellation/" + item.id + "/", item, this.config).then((response) => {
         console.log(item)
-      })*/
-      console.log("Se canselo: ",item)  
+      })
     },
     notificarSolicitud(item){   
       item.cancellation_request=1
