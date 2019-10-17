@@ -4,7 +4,7 @@
       {{alerta_informacion}}
     </v-alert>
 
-    <v-btn to="/about" absolute dark fab top right color="pink"> <p/>
+    <v-btn v-if="admin" to="/about" absolute dark fab top right color="pink"> <p/>
       <v-icon>mdi-plus</v-icon>
     </v-btn>
     <table class="table">
@@ -130,6 +130,7 @@ export default {
     return {
       items: [],
       detailproduct: [],
+      usuario_informacion: [],
       cantidad: '',
       alerta_informacion: '',
       metodo_pago: '',
@@ -173,6 +174,7 @@ export default {
   mounted() {
     this.token = JSON.parse(localStorage.getItem("token")).key;
     console.log("este es mi token" + this.token);
+    this.usuario_informacion = JSON.parse(localStorage.getItem("user"));
     if (JSON.parse(localStorage.getItem("user")).rol == 1) {
       this.admin = true;
     }
@@ -238,7 +240,7 @@ export default {
           this.config
         ).then(response => {
           let total = parseInt(this.cantidad) * parseFloat(item.price)
-          let sale = { "product": response.data.product, "user": response.data.user, "quantity": this.cantidad, "discount": 0, "total": total, "payment_method": this.metodo_pago}
+          let sale = { "product": response.data.product, "user": this.usuario_informacion.id, "quantity": this.cantidad, "discount": 0, "total": total, "payment_method": this.metodo_pago}
           axios.post(this.url + "sales/",sale, this.config).then(respuesta => {
             this.alert = true;
             this.alerta_informacion = "Se ha realizado la venta de " + this.cantidad + " producto(s) de " + item.name + " con exito!!";       

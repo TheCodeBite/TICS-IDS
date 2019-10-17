@@ -14,6 +14,9 @@
         <router-link to="/register" v-if="admin">
           <span class="mr-2">Registro</span>
         </router-link>
+        <router-link to="/transacciones" v-if="admin">
+          <span class="mr-2">Transacciones</span>
+        </router-link>
       </div>
       <v-spacer></v-spacer>
       <div text target="_blank">
